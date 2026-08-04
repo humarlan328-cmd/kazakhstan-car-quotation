@@ -29,7 +29,7 @@ def register_pdf_font() -> str:
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
 
-    font_path = Path("fonts/SourceHanSansSC-Regular.otf")
+    font_path = Path("fonts/SourceHanSansTC-Regular.otf")
 
     if not font_path.exists():
         raise RuntimeError(
