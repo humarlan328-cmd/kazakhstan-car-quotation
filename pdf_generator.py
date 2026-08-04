@@ -23,17 +23,37 @@ from config import (
 from utils import format_kzt, format_usd
 
 def register_pdf_font() -> str:
-    """注册云端可用的中文字体"""
+    """注册同时支持中文、俄语和英文的字体。"""
 
-    font_name = "STSong-Light"
+    font_candidates = [
+        Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+        Path("/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf"),
+        Path("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
+        Path("C:/Windows/Fonts/msyh.ttc"),
+        Path("C:/Windows/Fonts/simhei.ttf"),
+    ]
 
-    try:
-        pdfmetrics.registerFont(UnicodeCIDFont(font_name))
-        return font_name
-    except Exception as error:
-        raise RuntimeError(
-            f"PDF 中文字体注册失败：{error}"
-        ) from error
+    for font_path in font_candidates:
+        if not font_path.exists():
+            continue
+
+        try:
+            font_name = "VehicleQuoteFont"
+
+            pdfmetrics.registerFont(
+                TTFont(
+                    font_name,
+                    str(font_path),
+                    subfontIndex=0,
+                )
+            )
+            return font_name
+        except Exception:
+            continue
+
+    raise RuntimeError(
+        "没有找到同时支持中文和俄语的 PDF 字体。"
+    )
        
 
 
@@ -46,8 +66,8 @@ def create_quote_pdf(data: dict) -> bytes:
         pagesize=A4,
         rightMargin=18 * mm,
         leftMargin=18 * mm,
-        topMargin=16 * mm,
-        bottomMargin=16 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
         title="哈萨克斯坦车辆进口报价单",
     )
 
