@@ -11,6 +11,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from config import (
@@ -21,32 +22,19 @@ from config import (
 )
 from utils import format_kzt, format_usd
 
-
 def register_pdf_font() -> str:
-    fonts_dir = Path("C:/Windows/Fonts")
-    candidates = [
-        (fonts_dir / "simhei.ttf", None),
-        (fonts_dir / "msyh.ttc", 0),
-        (fonts_dir / "simsun.ttc", 0),
-    ]
+    """注册云端可用的中文字体"""
 
-    for index, (font_path, subfont_index) in enumerate(candidates):
-        if not font_path.exists():
-            continue
+    font_name = "STSong-Light"
 
-        font_name = f"VehicleQuoteFont{index}"
-        try:
-            if subfont_index is None:
-                pdfmetrics.registerFont(TTFont(font_name, str(font_path)))
-            else:
-                pdfmetrics.registerFont(
-                    TTFont(font_name, str(font_path), subfontIndex=subfont_index)
-                )
-            return font_name
-        except Exception:
-            continue
-
-    raise RuntimeError("没有找到可用于 PDF 的中文字体。")
+    try:
+        pdfmetrics.registerFont(UnicodeCIDFont(font_name))
+        return font_name
+    except Exception as error:
+        raise RuntimeError(
+            f"PDF 中文字体注册失败：{error}"
+        ) from error
+       
 
 
 def create_quote_pdf(data: dict) -> bytes:
