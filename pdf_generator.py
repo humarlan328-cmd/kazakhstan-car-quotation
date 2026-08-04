@@ -23,37 +23,29 @@ from config import (
 from utils import format_kzt, format_usd
 
 def register_pdf_font() -> str:
-    """注册同时支持中文、俄语和英文的字体。"""
+    """注册 PDF 字体（支持中文、俄文、英文）"""
 
-    font_candidates = [
-        Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
-        Path("/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf"),
-        Path("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
-        Path("C:/Windows/Fonts/msyh.ttc"),
-        Path("C:/Windows/Fonts/simhei.ttf"),
-    ]
+    from pathlib import Path
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
 
-    for font_path in font_candidates:
-        if not font_path.exists():
-            continue
+    font_path = Path("fonts/SourceHanSansSC-Regular.otf")
 
-        try:
-            font_name = "VehicleQuoteFont"
+    if not font_path.exists():
+        raise RuntimeError(
+            f"字体不存在：{font_path}\n请确认已放入 V5/fonts 文件夹。"
+        )
 
-            pdfmetrics.registerFont(
-                TTFont(
-                    font_name,
-                    str(font_path),
-                    subfontIndex=0,
-                )
-            )
-            return font_name
-        except Exception:
-            continue
+    font_name = "VehicleQuoteFont"
 
-    raise RuntimeError(
-        "没有找到同时支持中文和俄语的 PDF 字体。"
-    )
+    try:
+        pdfmetrics.registerFont(
+            TTFont(font_name, str(font_path))
+        )
+    except Exception as e:
+        raise RuntimeError(f"字体加载失败：{e}")
+
+    return font_name
        
 
 
