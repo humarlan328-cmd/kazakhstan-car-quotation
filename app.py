@@ -40,6 +40,52 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    html,
+body,
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+.stApp {
+    background-color: #f4f7fb !important;
+    color: #17233c !important;
+    color-scheme: light !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, label, span,
+[data-testid="stMarkdownContainer"] {
+    color: #17233c !important;
+}
+
+input,
+textarea,
+button,
+[role="combobox"],
+[data-baseweb="select"] > div {
+    color-scheme: light !important;
+}
+
+input,
+textarea,
+[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    color: #17233c !important;
+    -webkit-text-fill-color: #17233c !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #7c8799 !important;
+    -webkit-text-fill-color: #7c8799 !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stSidebar"] {
+    background-color: #eef2f7 !important;
+}
+
+[data-testid="stSidebar"] * {
+    color: #17233c !important;
+}
     .stApp { background-color: #f4f7fb; }
     .block-container { max-width: 1180px; padding-top: 1.5rem; }
     div[data-testid="stMetric"] {
