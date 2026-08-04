@@ -14,7 +14,7 @@ from config import (
     WHATSAPP_NUMBER,
 )
 from database import initialize_database, save_quotation
-from pdf_generator import create_quote_pdf
+
 from utils import (
     calculate_price,
     clean_display_value,
@@ -28,7 +28,12 @@ from utils import (
     parse_price,
     resolve_columns,
 )
+# ===========================
+# 管理员账号
+# ===========================
 
+ADMIN_USERNAME = "huma"
+ADMIN_PASSWORD = "19940328"
 
 st.set_page_config(
     page_title="哈萨克斯坦车辆进口报价系统 V5",
@@ -360,24 +365,6 @@ if search_button:
             if saved:
                 st.success("客户报价已保存到数据库。")
 
-            try:
-                pdf_data = create_quote_pdf(quotation_data)
-                file_name = (
-                    f"quotation_{quote_number}_"
-                    f"{make_safe_filename(quotation_data['brand'])}_"
-                    f"{make_safe_filename(quotation_data['model'])}.pdf"
-                )
-                st.download_button(
-                    "📄 下载 PDF 报价单 / Скачать PDF",
-                    data=pdf_data,
-                    file_name=file_name,
-                    mime="application/pdf",
-                    width="stretch",
-                    on_click="ignore",
-                    key=f"pdf_{row_index}_{number}",
-                )
-            except Exception as error:
-                st.error("PDF 生成失败。")
-                st.exception(error)
+            
 
 st.caption(f"WhatsApp：{WHATSAPP_NUMBER}")
